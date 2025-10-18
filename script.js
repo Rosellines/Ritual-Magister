@@ -240,9 +240,15 @@ downloadBtn.addEventListener('click', async () => {
 
     try {
         const scale = 4;
-        const rect = nftCard.getBoundingClientRect();
-        const fixedWidth = Math.round(rect.width);
-        const fixedHeight = Math.round(rect.height);
+
+        // 🔒 Gunakan ukuran fix (rasio tetap dari preview)
+        const previewWidth = nftCard.offsetWidth;
+        const previewHeight = nftCard.offsetHeight;
+
+        // Rasio fix berdasarkan tampilan preview pertama (mis. 3:4)
+        const aspectRatio = previewWidth / previewHeight;
+        const fixedWidth = 800; // ukuran tetap output
+        const fixedHeight = Math.round(fixedWidth / aspectRatio);
 
         // 🔒 Wrapper fix-size
         const wrapper = document.createElement('div');
@@ -259,11 +265,23 @@ downloadBtn.addEventListener('click', async () => {
         clone.style.height = `${fixedHeight}px`;
         clone.style.maxWidth = `${fixedWidth}px`;
         clone.style.maxHeight = `${fixedHeight}px`;
-        clone.style.aspectRatio = 'unset';
+        clone.style.aspectRatio = `${aspectRatio}`;
         clone.style.transform = 'none';
         clone.style.transition = 'none';
+        clone.style.overflow = 'hidden';
+        clone.style.display = 'block';
+        clone.style.position = 'relative';
 
-        // Bersihkan constraint dari elemen dalam
+        // 🧩 Jaga agar gambar di tengah tetap proporsional
+        clone.querySelectorAll('img').forEach(img => {
+            img.style.width = '100%';
+            img.style.height = 'auto';
+            img.style.objectFit = 'contain';
+            img.style.objectPosition = 'center';
+            img.style.display = 'block';
+        });
+
+        // Bersihkan constraint lain
         clone.querySelectorAll('*').forEach(el => {
             el.style.maxWidth = 'unset';
             el.style.maxHeight = 'unset';
@@ -350,58 +368,6 @@ downloadBtn.addEventListener('click', async () => {
         downloadBtn.textContent = 'Generate';
         downloadBtn.disabled = false;
     }
-    try {
-        const scale = 4;
-
-        // 🔒 Gunakan ukuran fix (rasio tetap dari preview)
-        const previewWidth = nftCard.offsetWidth;
-        const previewHeight = nftCard.offsetHeight;
-
-        // Rasio fix berdasarkan tampilan preview pertama (mis. 3:4)
-        const aspectRatio = previewWidth / previewHeight;
-        const fixedWidth = 800; // ukuran tetap output
-        const fixedHeight = Math.round(fixedWidth / aspectRatio);
-
-        // 🔒 Wrapper fix-size
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'absolute';
-        wrapper.style.top = '-9999px';
-        wrapper.style.left = '-9999px';
-        wrapper.style.width = `${fixedWidth}px`;
-        wrapper.style.height = `${fixedHeight}px`;
-        wrapper.style.overflow = 'hidden';
-
-        // ✨ Clone kartu
-        const clone = nftCard.cloneNode(true);
-        clone.style.width = `${fixedWidth}px`;
-        clone.style.height = `${fixedHeight}px`;
-        clone.style.maxWidth = `${fixedWidth}px`;
-        clone.style.maxHeight = `${fixedHeight}px`;
-        clone.style.aspectRatio = `${aspectRatio}`;
-        clone.style.transform = 'none';
-        clone.style.transition = 'none';
-        clone.style.overflow = 'hidden';
-        clone.style.display = 'block';
-        clone.style.position = 'relative';
-
-        // 🧩 Jaga agar gambar di tengah tetap proporsional
-        clone.querySelectorAll('img').forEach(img => {
-            img.style.width = '100%';
-            img.style.height = 'auto';
-            img.style.objectFit = 'contain';
-            img.style.objectPosition = 'center';
-            img.style.display = 'block';
-        });
-
-        // Bersihkan constraint lain
-        clone.querySelectorAll('*').forEach(el => {
-            el.style.maxWidth = 'unset';
-            el.style.maxHeight = 'unset';
-            el.style.aspectRatio = 'unset';
-        });
-
-        wrapper.appendChild(clone);
-        document.body.appendChild(wrapper);
 });
 
 
