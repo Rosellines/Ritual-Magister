@@ -239,7 +239,7 @@ downloadBtn.addEventListener('click', async () => {
     downloadBtn.disabled = true;
 
     try {
-        const scale = 4;
+        const scale = 2;
 
         // 🔒 Gunakan ukuran fix (rasio tetap dari preview)
         const previewWidth = nftCard.offsetWidth;
