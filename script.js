@@ -239,31 +239,39 @@ downloadBtn.addEventListener('click', async () => {
     downloadBtn.disabled = true;
 
     try {
-        // 📸 Langsung screenshot elemen yang tampil di layar
-        const scale = 3; // resolusi tinggi tanpa ubah proporsi
-        const canvas = await html2canvas(nftCard, {
-            scale,
-            backgroundColor: null,
-            useCORS: true,
-            logging: false,
-            windowWidth: document.documentElement.scrollWidth,
-            windowHeight: document.documentElement.scrollHeight
-        });
+    // Pastikan kartu terlihat penuh di viewport sebelum diambil
+    nftCard.scrollIntoView({ behavior: 'instant', block: 'center', inline: 'center' });
 
-        // 💾 Simpan hasilnya
-        const link = document.createElement('a');
-        link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    } catch (err) {
-        console.error(err);
-        alert('Gagal mengambil tangkapan layar kartu NFT.');
-    } finally {
-        downloadBtn.textContent = 'Generate';
-        downloadBtn.disabled = false;
-    }
+    // Tunggu sedikit supaya browser benar-benar render posisi & style terakhir
+    await new Promise(r => setTimeout(r, 300));
+
+    // Ambil langsung tampilan yang sedang terlihat di layar
+    const rect = nftCard.getBoundingClientRect();
+    const canvas = await html2canvas(document.body, {
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY,
+      width: rect.width,
+      height: rect.height,
+      scale: 3,                // resolusi tinggi
+      useCORS: true,
+      backgroundColor: null,
+      logging: false
+    });
+
+    // Simpan hasilnya
+    const link = document.createElement('a');
+    link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+  } catch (err) {
+    console.error(err);
+    alert('Gagal menangkap tampilan kartu.');
+  } finally {
+    downloadBtn.textContent = 'Generate';
+    downloadBtn.disabled = false;
+  }
 });
-
 
 
 // Event listeners
