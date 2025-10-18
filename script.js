@@ -290,6 +290,27 @@ downloadBtn.addEventListener('click', async () => {
 
         wrapper.appendChild(clone);
         document.body.appendChild(wrapper);
+// 🧩 Pastikan seluruh isi clone di-scale proporsional seperti preview
+const originalRect = nftCard.getBoundingClientRect();
+const scaleX = fixedWidth / originalRect.width;
+const scaleY = fixedHeight / originalRect.height;
+const scaleFactor = Math.min(scaleX, scaleY);
+
+// Bungkus isi dalam container yang di-center dan di-scale
+const innerWrapper = document.createElement('div');
+innerWrapper.style.transform = `scale(${scaleFactor})`;
+innerWrapper.style.transformOrigin = 'top left';
+innerWrapper.style.width = `${originalRect.width}px`;
+innerWrapper.style.height = `${originalRect.height}px`;
+innerWrapper.style.position = 'absolute';
+innerWrapper.style.left = `${(fixedWidth - originalRect.width * scaleFactor) / 2}px`;
+innerWrapper.style.top = `${(fixedHeight - originalRect.height * scaleFactor) / 2}px`;
+
+// Pindahkan semua isi clone ke dalam innerWrapper
+while (clone.firstChild) {
+  innerWrapper.appendChild(clone.firstChild);
+}
+clone.appendChild(innerWrapper);
 
         // 🖼️ Fix object-fit gambar & logo
         clone.querySelectorAll('img').forEach(img => {
