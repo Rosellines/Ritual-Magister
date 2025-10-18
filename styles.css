@@ -1,0 +1,491 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border-color: #334155;
+    --accent-color: #3b82f6;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background: var(--bg-secondary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.nft-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 2/3;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-out, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+.nft-card:hover {
+    transform: scale(1.02);
+}
+
+.light-strip {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    pointer-events: none;
+    background: linear-gradient(110deg, 
+        transparent 25%, 
+        rgba(255,107,107,0.4) 30%, 
+        rgba(255,107,107,0.6) 35%, 
+        rgba(255,107,107,0.8) 40%, 
+        rgba(255,107,107,0.6) 45%, 
+        rgba(255,107,107,0.4) 50%, 
+        transparent 55%
+    );
+    background-size: 200% 100%;
+    animation: light-sweep 8s ease-in-out infinite;
+    mix-blend-mode: overlay;
+    z-index: 9999; /* moved to top as requested */
+}
+
+@keyframes light-sweep {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.glass-reflection {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.1) 2px,
+        rgba(255,255,255,0.1) 4px
+    );
+    animation: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-150%) skewX(-25deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(250%) skewX(-25deg);
+        opacity: 0;
+    }
+}
+
+.hologram-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    mix-blend-mode: color-dodge;
+    transition: opacity 0.3s;
+    background: linear-gradient(45deg, 
+        rgba(255,0,150,0.2) 0%, 
+        rgba(0,255,255,0.2) 25%, 
+        rgba(255,255,0,0.2) 50%, 
+        rgba(255,0,150,0.2) 75%, 
+        rgba(0,255,255,0.2) 100%
+    );
+}
+
+.nft-card:hover .hologram-overlay {
+    opacity: 0.3;
+}
+
+.spotlight-effect {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+.nft-card:hover .spotlight-effect {
+    opacity: 1;
+}
+
+.texture-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.card-logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 3rem;
+    height: 3rem;
+    z-index: 10;
+}
+
+.card-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: none; /* removed drop-shadow as requested */
+    transition: all 0.3s ease;
+    border: none; /* removed border white */
+    border-radius: 0;
+}
+
+.card-logo:hover img {
+    transform: scale(1.1);
+    /* no extra drop-shadow on hover */
+}
+
+.card-header {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    text-align: right;
+    z-index: 10;
+}
+
+.card-number {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+.card-owner {
+    display: block;
+    font-size: 0.75rem;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    margin-top: 0.25rem;
+}
+
+.card-content {
+    position: absolute;
+    inset: 5rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+}
+
+.card-image {
+    flex: 1;
+    margin-bottom: 1rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.card-description {
+    font-size: 0.875rem;
+    color: #e0e0e0;
+    opacity: 0.9;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+}
+
+.rarity-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,107,107,0.6);
+}
+
+.creator-text {
+    font-size: 0.75rem;
+    font-family: 'Courier New', monospace;
+    color: #ffffff;
+}
+
+.glow-effect {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 30% 20%, rgba(255,107,107,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,107,107,0.15) 0%, transparent 60%);
+    mix-blend-mode: overlay;
+}
+
+.theme-gallery {
+    margin-top: 3rem;
+}
+
+.theme-gallery h3 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.theme-btn {
+    height: 5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.theme-btn:hover {
+    transform: scale(1.05);
+}
+
+.theme-btn.active {
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.theme-btn span {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+}
+
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-container {
+        padding: 1rem;
+    }
+    
+    .theme-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.font-orbitron {
+    font-family: 'Orbitron', monospace;
+}
+
+.font-cyberpunk {
+    font-family: 'Courier New', monospace;
+}
+
+.font-futura {
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+.font-quantum {
+    font-family: 'Arial Black', sans-serif;
+}
+
+/* snapshot helper: pause animations/transitions when creating PNG */
+.nft-card.snapshot .light-strip,
+.nft-card.snapshot .glass-reflection,
+.nft-card.snapshot .hologram-overlay,
+.nft-card.snapshot .glow-effect {
+    animation: none !important;
+    transition: none !important;
+}

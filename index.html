@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Card Generator - Create Holographic Cards</title>
+    <meta name="description" content="Create stunning holographic NFT cards with custom themes and effects">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>NFT Card Generator</h1>
+            <p>Create stunning holographic NFT cards with custom themes and effects</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="card">
+                    <h2>Card Customization</h2>
+                    
+                    <!-- Card Title dropdown -->
+                    <div class="form-group">
+                        <label for="cardTitle">Card Title</label>
+                        <select id="cardTitle">
+                            <option value="Arcane Relic">Arcane Relic</option>
+                            <option value="Celestial Charm">Celestial Charm</option>
+                            <option value="Ancient Relic">Ancient Relic</option>
+                            <option value="Void Amulet">Void Amulet</option>
+                            <option value="Astral Codex">Astral Codex</option>
+                            <option value="Dark Sigil">Dark Sigil</option>
+                            <option value="Rune of Eternity">Rune of Eternity</option>
+                            <option value="Mystic artifact" selected>Mystic artifact</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cardDescription">Description</label>
+                        <input type="text" id="cardDescription" value="A rare digital collectible with extraordinary powers" placeholder="Enter card description">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardRarity">Rarity</label>
+                            <select id="cardRarity">
+                                <option value="Sound OG - Epic">Sound OG - Epic</option>
+                                <option value="Sound Sage - Legendary" selected>Sound Sage - Legendary</option>
+                                <option value="Sound Dev - Mythic">Sound Dev - Mythic</option>
+                                <option value="Sound Satirist - Legendary">Sound Satirist - Legendary</option>
+                                <option value="Sound Scout - Legendary">Sound Scout - Legendary</option>
+                                <option value="Sound Highlight - Mythic">Sound Highlight - Mythic</option>
+                                <option value="Sound Board - Rare">Sound Board - Rare</option>
+                                <option value="Soundy - Common">Soundy - Common</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" value="#001" placeholder="#001">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cardOwner">Owner Name</label>
+                        <input type="text" id="cardOwner" value="" placeholder="Enter owner name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="themeSelect">Theme</label>
+                        <select id="themeSelect">
+                            <option value="cosmic" selected>Cosmic</option>
+                            <option value="neon">Neon Cyber</option>
+                            <option value="ocean">Ocean Depths</option>
+                            <option value="fire">Flame Core</option>
+                            <option value="sunset">Sunset Glow</option>
+                            <option value="midnight">Midnight</option>
+                            <option value="royal">Royal Purple</option>
+                            <option value="azure">Azure Sky</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fontSelect">Font Style</label>
+                        <select id="fontSelect">
+                            <option value="orbitron" selected>Orbitron (Futuristic)</option>
+                            <option value="cyberpunk">Cyberpunk (Monospace)</option>
+                            <option value="futura">Futura (Clean)</option>
+                            <option value="quantum">Quantum (Bold)</option>
+                        </select>
+                    </div>
+
+                    <!-- DOWNLOAD SELECTOR (PNG / LOTTIE JSON) -->
+                    <div class="form-group">
+                        <label for="downloadSelect">NFT Card Output</label>
+                        <select id="downloadSelect" class="btn-primary">
+                            <option value="png" selected>PNG</option>
+                            <option value="lottie">Lottie JSON</option>
+                        </select>
+                    </div>
+                    <button id="downloadBtn" class="btn-primary">Generate</button>
+                </div>
+            </div>
+
+            <!-- Card Preview -->
+            <div class="preview-container">
+                <div id="nftCard" class="nft-card">
+                    <div class="light-strip"></div>
+                    <div class="glass-reflection"></div>
+                    <div class="hologram-overlay"></div>
+                    <div class="spotlight-effect"></div>
+                    <div class="texture-overlay"></div>
+
+                    <div class="card-logo">
+                        <img src="logo.png" alt="Logo NFT">
+                    </div>
+
+                    <div class="card-header">
+                        <span id="displayNumber" class="card-number">#001</span>
+                        <span id="displayOwner" class="card-owner"></span>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="card-image">
+                            <img src="image.jpeg" alt="NFT Artwork">
+                        </div>
+
+                        <div class="card-info">
+                            <h3 id="displayTitle" class="card-title">Mystic artifact</h3>
+                            <p id="displayDescription" class="card-description">A rare digital collectible with extraordinary powers</p>
+                            
+                            <div class="card-footer">
+                                <span id="displayRarity" class="rarity-badge">Sound Sage - Legendary</span>
+                                <span class="creator-text">By Soundness</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glow-effect"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Gallery -->
+        <section class="theme-gallery">
+            <h3>Available Themes</h3>
+            <div class="theme-grid" id="themeGrid"></div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>NFT Card Generator - Create stunning holographic cards</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
