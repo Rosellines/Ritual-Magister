@@ -304,17 +304,6 @@ downloadBtn.addEventListener('click', async () => {
             cloneLightStrip.style.animation = 'none';
             cloneLightStrip.style.transition = 'none';
             cloneLightStrip.style.backgroundPosition = '30% 0'; // efek nyinar di tengah
-             // Set warna putih transparan lembut (gradient)
-    cloneLightStrip.style.background = `
-        linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.5) 50%,
-            rgba(255, 255, 255, 0) 100%
-        )
-    `;
-    cloneLightStrip.style.opacity = '0.6'; // bisa disesuaikan (0.3–0.8)
-
         }
 
         // 📸 Render base card
