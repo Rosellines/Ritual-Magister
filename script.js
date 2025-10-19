@@ -304,7 +304,7 @@ downloadBtn.addEventListener('click', async () => {
             cloneLightStrip.style.animation = 'none';
             cloneLightStrip.style.transition = 'none';
             cloneLightStrip.style.backgroundPosition = '30% 0'; // efek nyinar di tengah
-         // Set warna putih transparan lembut (gradient)
+             // Set warna putih transparan lembut (gradient)
     cloneLightStrip.style.background = `
         linear-gradient(
             90deg,
@@ -314,7 +314,8 @@ downloadBtn.addEventListener('click', async () => {
         )
     `;
     cloneLightStrip.style.opacity = '0.6'; // bisa disesuaikan (0.3–0.8)
-}
+
+        }
 
         // 📸 Render base card
         const canvas = await html2canvas(wrapper, {
@@ -347,25 +348,10 @@ downloadBtn.addEventListener('click', async () => {
         ctx.globalCompositeOperation = 'source-over';
 
         // 💾 Download hasil
-        await document.fonts.ready;
-await new Promise(r => setTimeout(r, 300));
-
-const scale = window.devicePixelRatio || 2;
-const canvas = await html2canvas(wrapper, {
-  scale,
-  backgroundColor: null,
-  useCORS: true,
-  logging: false,
-});
-
-canvas.toBlob(blob => {
-  const link = document.createElement('a');
-  link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
-  link.href = URL.createObjectURL(blob);
-  link.click();
-  URL.revokeObjectURL(link.href);
-}, 'image/png');
-
+        const link = document.createElement('a');
+        link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
 
         document.body.removeChild(wrapper);
     } catch (err) {
