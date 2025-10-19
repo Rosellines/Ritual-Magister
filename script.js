@@ -231,165 +231,163 @@ nftCard.addEventListener('mouseleave', () => {
     mouseY = 50;
 });
 
-// Download / Export logic
-const downloadSelect = document.getElementById('downloadSelect');
-
+// ============================================
+// 🔒 IMPROVED EXPORT FUNCTION (1:1 PRECISION)
+// ============================================
 downloadBtn.addEventListener('click', async () => {
   downloadBtn.textContent = 'Rendering...';
   downloadBtn.disabled = true;
 
   try {
-    const scale = 2; // 🔒 Gunakan ukuran fix (rasio tetap dari preview)
-    const previewWidth = nftCard.offsetWidth;
-    const previewHeight = nftCard.offsetHeight;
-
-    // Rasio fix berdasarkan tampilan preview pertama (mis. 3:4)
+    // 🎯 GET EXACT PREVIEW DIMENSIONS
+    const previewRect = nftCard.getBoundingClientRect();
+    const previewWidth = previewRect.width;
+    const previewHeight = previewRect.height;
     const aspectRatio = previewWidth / previewHeight;
-    const fixedWidth = 800; // ukuran tetap output
-    const fixedHeight = Math.round(fixedWidth / aspectRatio);
 
-    // 🔒 Wrapper fix-size
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = '-9999px';
-    wrapper.style.left = '-9999px';
-    wrapper.style.width = `${fixedWidth}px`;
-    wrapper.style.height = `${fixedHeight}px`;
-    wrapper.style.overflow = 'hidden';
+    // 🎯 DEFINE FIXED OUTPUT SIZE (maintaining aspect ratio)
+    const exportScale = 2; // 2x untuk quality
+    const exportWidth = Math.round(previewWidth * exportScale);
+    const exportHeight = Math.round(previewHeight * exportScale);
 
-    // ✨ Clone kartu
-    const clone = nftCard.cloneNode(true);
-    clone.style.width = `${fixedWidth}px`;
-    clone.style.height = `${fixedHeight}px`;
-    clone.style.maxWidth = `${fixedWidth}px`;
-    clone.style.maxHeight = `${fixedHeight}px`;
-    clone.style.aspectRatio = `${aspectRatio}`;
-    clone.style.transform = 'none';
-    clone.style.transition = 'none';
-    clone.style.overflow = 'hidden';
-    clone.style.display = 'block';
-    clone.style.position = 'relative';
+    // ============================================
+    // STEP 1: CREATE CLEAN CONTAINER
+    // ============================================
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.top = '-9999px';
+    container.style.left = '-9999px';
+    container.style.width = `${exportWidth}px`;
+    container.style.height = `${exportHeight}px`;
+    container.style.overflow = 'hidden';
+    container.style.background = 'transparent';
 
-    // 🧩 Jaga agar gambar di tengah tetap proporsional
-    clone.querySelectorAll('img').forEach(img => {
-      img.style.width = '100%';
-      img.style.height = 'auto';
-      img.style.objectFit = 'contain';
-      img.style.objectPosition = 'center';
-      img.style.display = 'block';
-    });
+    // ============================================
+    // STEP 2: CLONE & PREPARE CARD
+    // ============================================
+    const cardClone = nftCard.cloneNode(true);
+    
+    // RESET ALL TRANSFORMS & ANIMATIONS
+    cardClone.style.position = 'absolute';
+    cardClone.style.top = '0';
+    cardClone.style.left = '0';
+    cardClone.style.width = `${exportWidth}px`;
+    cardClone.style.height = `${exportHeight}px`;
+    cardClone.style.transform = 'none';
+    cardClone.style.transition = 'none';
+    cardClone.style.animation = 'none';
+    cardClone.style.perspectiveOrigin = 'center';
+    cardClone.style.perspective = 'none';
+    cardClone.style.border = cardClone.style.border || 'none';
 
-    // Bersihkan constraint lain
-    clone.querySelectorAll('*').forEach(el => {
-      el.style.maxWidth = 'unset';
-      el.style.maxHeight = 'unset';
-      el.style.aspectRatio = 'unset';
-    });
+    // REMOVE UNWANTED STYLES
+    cardClone.style.boxShadow = 'none';
+    cardClone.style.filter = 'none';
+    cardClone.style.willChange = 'auto';
 
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
-
-    // 🧩 Pastikan seluruh isi clone di-scale proporsional seperti preview
-    const originalRect = nftCard.getBoundingClientRect();
-    const scaleX = fixedWidth / originalRect.width;
-    const scaleY = fixedHeight / originalRect.height;
-    const scaleFactor = Math.min(scaleX, scaleY);
-
-    // Bungkus isi dalam container yang di-center dan di-scale
-    const innerWrapper = document.createElement('div');
-    innerWrapper.style.transform = `scale(${scaleFactor})`;
-    innerWrapper.style.transformOrigin = 'top left';
-    innerWrapper.style.width = `${originalRect.width}px`;
-    innerWrapper.style.height = `${originalRect.height}px`;
-    innerWrapper.style.position = 'absolute';
-    innerWrapper.style.left = `${(fixedWidth - originalRect.width * scaleFactor) / 2}px`;
-    innerWrapper.style.top = `${(fixedHeight - originalRect.height * scaleFactor) / 2}px`;
-
-    // Pindahkan semua isi clone ke dalam innerWrapper
-    while (clone.firstChild) {
-      innerWrapper.appendChild(clone.firstChild);
-    }
-    clone.appendChild(innerWrapper);
-
-    // 🖼️ Fix object-fit gambar & logo
-    clone.querySelectorAll('img').forEach(img => {
-      const originalImg = nftCard.querySelector(`img[src="${img.getAttribute('src')}"]`);
-      if (originalImg) {
-        const cs = window.getComputedStyle(originalImg);
-        img.style.objectFit = cs.objectFit;
-        img.style.width = cs.width;
-        img.style.height = cs.height;
-      }
-    });
-
-    // 🚫 Hapus background-clip text
-    clone.querySelectorAll('.card-title, .card-number').forEach(el => {
-      el.style.background = 'none';
-      el.style.webkitBackgroundClip = 'unset';
-      el.style.webkitTextFillColor = '#ffffff';
-    });
-
-    // 🧊 Freeze semua animasi
-    clone.querySelectorAll('*').forEach(el => {
+    // ============================================
+    // STEP 3: FIX ALL CHILD ELEMENTS
+    // ============================================
+    cardClone.querySelectorAll('*').forEach((el) => {
+      // Reset transforms
+      el.style.transform = 'none';
       el.style.animation = 'none';
       el.style.transition = 'none';
-    });
-
-    // 💡 🟡 Atur posisi light-strip di tengah
-    const cloneLightStrip = clone.querySelector('.light-strip');
-    if (cloneLightStrip) {
-      // hentikan animasi dan paksa posisi
-      cloneLightStrip.style.animation = 'none';
-      cloneLightStrip.style.transition = 'none';
-      cloneLightStrip.style.backgroundPosition = '30% 0'; // efek nyinar di tengah
-    }
-
-    // 📸 Render base card
-    const canvas = await html2canvas(wrapper, {
-      scale,
-      backgroundColor: null,
-      useCORS: true
-    });
-    const ctx = canvas.getContext('2d');
-
-    // 🌈 Render efek hologram & strip manual supaya tetap kuat
-    const overlaySelectors = [
-      '.light-strip',
-      '.hologram-overlay',
-      '.glow-effect',
-      '.spotlight-effect'
-    ];
-
-    for (const selector of overlaySelectors) {
-      const originalLayer = nftCard.querySelector(selector);
-      const cloneLayer = clone.querySelector(selector);
-      if (originalLayer && cloneLayer) {
-        const cs = window.getComputedStyle(originalLayer);
-        const layerCanvas = await html2canvas(cloneLayer, {
-          scale,
-          backgroundColor: null,
-          useCORS: true
-        });
-        ctx.globalAlpha = parseFloat(cs.opacity) || 1;
-        ctx.globalCompositeOperation = cs.mixBlendMode || 'overlay';
-        ctx.drawImage(layerCanvas, 0, 0);
+      
+      // Fix sizing
+      const computed = window.getComputedStyle(el);
+      
+      // Preserve width/height ratios
+      if (computed.width !== 'auto') {
+        const originalWidth = parseFloat(computed.width);
+        el.style.width = `${originalWidth * exportScale}px`;
       }
+      if (computed.height !== 'auto') {
+        const originalHeight = parseFloat(computed.height);
+        el.style.height = `${originalHeight * exportScale}px`;
+      }
+      
+      // Reset perspective & 3D effects
+      el.style.perspectiveOrigin = 'unset';
+      el.style.perspective = 'none';
+      el.style.webkitPerspective = 'none';
+    });
+
+    // ============================================
+    // STEP 4: HANDLE IMAGES
+    // ============================================
+    cardClone.querySelectorAll('img').forEach((img) => {
+      img.style.maxWidth = 'none';
+      img.style.maxHeight = 'none';
+      img.style.width = '100%';
+      img.style.height = 'auto';
+      img.style.display = 'block';
+      img.style.objectFit = 'contain';
+      img.style.objectPosition = 'center';
+    });
+
+    // ============================================
+    // STEP 5: REMOVE BACKGROUND-CLIP GRADIENTS
+    // ============================================
+    cardClone.querySelectorAll('.card-title, .card-number, [style*="background-clip"]').forEach((el) => {
+      el.style.background = getComputedStyle(el).color;
+      el.style.webkitBackgroundClip = 'unset';
+      el.style.webkitTextFillColor = 'unset';
+      el.style.backgroundClip = 'unset';
+    });
+
+    // ============================================
+    // STEP 6: HANDLE ANIMATIONS (freeze light-strip)
+    // ============================================
+    const cloneLightStrip = cardClone.querySelector('.light-strip');
+    if (cloneLightStrip) {
+      cloneLightStrip.style.animation = 'none';
+      cloneLightStrip.style.backgroundPosition = '30% 0';
+      cloneLightStrip.style.opacity = '0.8';
     }
 
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = 'source-over';
+    // ============================================
+    // STEP 7: APPEND & RENDER
+    // ============================================
+    container.appendChild(cardClone);
+    document.body.appendChild(container);
 
-    // 💾 Download hasil
+    // Wait for images to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // ============================================
+    // STEP 8: RENDER WITH HTML2CANVAS
+    // ============================================
+    const mainCanvas = await html2canvas(container, {
+      scale: 1, // Already scaled in the clone
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      imageTimeout: 10000,
+      logging: false,
+      windowWidth: exportWidth,
+      windowHeight: exportHeight
+    });
+
+    // ============================================
+    // STEP 9: CREATE FINAL OUTPUT
+    // ============================================
     const link = document.createElement('a');
-    link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase() || 'export'}.png`;
+    link.href = mainCanvas.toDataURL('image/png');
     link.click();
 
-    document.body.removeChild(wrapper);
+    // ============================================
+    // STEP 10: CLEANUP
+    // ============================================
+    document.body.removeChild(container);
+
+    // Notify success
+    console.log(`[SUCCESS] Exported at ${exportWidth}x${exportHeight}px`);
 
   } catch (err) {
-    console.error(err);
-    alert('Gagal generate gambar.');
+    console.error('[ERROR] Export failed:', err);
+    alert('Gagal generate gambar. Silakan coba lagi.');
   } finally {
     downloadBtn.textContent = 'Generate';
     downloadBtn.disabled = false;
