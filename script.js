@@ -278,9 +278,9 @@ downloadBtn.addEventListener('click', async () => {
             const originalImg = nftCard.querySelector(`img[src="${img.getAttribute('src')}"]`);
             if (originalImg) {
                 const cs = window.getComputedStyle(originalImg);
-                img.style.objectFit = cover;
-                img.style.width = 100%;
-                img.style.height = 100%;
+                img.style.objectFit = cs.objectF;
+                img.style.width = cs.width;
+                img.style.height = cs.height;
             }
         });
 
