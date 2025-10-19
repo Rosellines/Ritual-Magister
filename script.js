@@ -242,7 +242,7 @@ downloadBtn.addEventListener('click', async () => {
         const scale = 4;
         const rect = nftCard.getBoundingClientRect();
         const fixedWidth = 2000;
-        const fixedHeight = 2400;
+        const fixedHeight = Math.round(rect.height);;
 
         // 🔒 Wrapper fix-size
         const wrapper = document.createElement('div');
