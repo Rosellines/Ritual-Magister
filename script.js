@@ -105,7 +105,7 @@ function updateCard() {
 function changeTheme(themeKey) {
     currentTheme = themeKey;
     const theme = themes[themeKey];
-    
+
     nftCard.style.background = theme.background;
     nftCard.style.boxShadow = `0 25px 50px -12px ${theme.accent}80, 0 20px 40px -10px ${theme.accent}60, 0 15px 30px -8px ${theme.accent}40`;
 
@@ -115,17 +115,17 @@ glowEffect.style.background = `
   radial-gradient(circle at 30% 20%, ${theme.accent}33 0%, transparent 50%),
   radial-gradient(circle at 70% 80%, ${theme.accent}22 0%, transparent 60%)
 `;
-    
+
     const rarityBadge = document.getElementById('displayRarity');
     rarityBadge.style.background = `${theme.accent}40`;
     rarityBadge.style.borderColor = `${theme.accent}60`;
-    
+
     // Update theme buttons
     document.querySelectorAll('.theme-btn').forEach((btn, index) => {
         const key = Object.keys(themes)[index];
         btn.classList.toggle('active', key === themeKey);
     });
-    
+
     updateHologramOverlay(theme.hologram);
     updateTextureOverlay(themeKey);
 }
@@ -205,18 +205,18 @@ nftCard.addEventListener('mousemove', (e) => {
     const rect = nftCard.getBoundingClientRect();
     mouseX = ((e.clientX - rect.left) / rect.width) * 100;
     mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     const spotlightEffect = document.querySelector('.spotlight-effect');
     const theme = themes[currentTheme];
     spotlightEffect.style.background = `radial-gradient(circle 200px at ${mouseX}% ${mouseY}%, ${theme.accent}30 0%, transparent 70%)`;
-    
+
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const mouseXPos = e.clientX - rect.left;
     const mouseYPos = e.clientY - rect.top;
     const rotateX = ((mouseYPos - centerY) / centerY) * 10;
     const rotateY = ((centerX - mouseXPos) / centerX) * 10;
-    
+
     nftCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
 });
 
@@ -241,14 +241,14 @@ downloadBtn.addEventListener('click', async () => {
     try {
         const scale = 4;
         const rect = nftCard.getBoundingClientRect();
-        const fixedWidth = Math.round(rect.width);;
-        const fixedHeight = Math.round(rect.height);;
+        const fixedWidth = Math.round(rect.width);
+        const fixedHeight = Math.round(rect.height);
 
         // 🔒 Wrapper fix-size
         const wrapper = document.createElement('div');
-        wrapper.style.position = 'absolute';
-        wrapper.style.top = '-9999px';
-        wrapper.style.left = '-9999px';
+        wrapper.style.position = 'fixed';
+        wrapper.style.top = '0';
+        wrapper.style.left = '0';
         wrapper.style.width = `${fixedWidth}px`;
         wrapper.style.height = `${fixedHeight}px`;
         wrapper.style.overflow = 'hidden';
@@ -278,7 +278,7 @@ downloadBtn.addEventListener('click', async () => {
             const originalImg = nftCard.querySelector(`img[src="${img.getAttribute('src')}"]`);
             if (originalImg) {
                 const cs = window.getComputedStyle(originalImg);
-                img.style.objectFit = cs.objectF;
+                img.style.objectFit = cs.objectFit;
                 img.style.width = cs.width;
                 img.style.height = cs.height;
             }
@@ -306,41 +306,43 @@ downloadBtn.addEventListener('click', async () => {
             cloneLightStrip.style.backgroundPosition = '30% 0'; // efek nyinar di tengah
         }
 
-        // 📸 Render base card
-        const canvas = await html2canvas(wrapper, {
-            scale,
-            backgroundColor: null,
-            useCORS: true
-        });
 
-        const ctx = canvas.getContext('2d');
+      // 📸 Render base card
+      const canvas = await htmlToImage.toCanvas(wrapper, {
+        pixelRatio: scale,   // same as scale in html2canvas
+        backgroundColor: null // keep transparency
+      });
 
-        // 🌈 Render efek hologram & strip manual supaya tetap kuat
-        const overlaySelectors = ['.light-strip', '.hologram-overlay', '.glow-effect', '.spotlight-effect'];
-        for (const selector of overlaySelectors) {
-            const originalLayer = nftCard.querySelector(selector);
-            const cloneLayer = clone.querySelector(selector);
-            if (originalLayer && cloneLayer) {
-                const cs = window.getComputedStyle(originalLayer);
-                const layerCanvas = await html2canvas(cloneLayer, {
-                    scale,
-                    backgroundColor: null,
-                    useCORS: true
-                });
-                ctx.globalAlpha = parseFloat(cs.opacity) || 1;
-                ctx.globalCompositeOperation = cs.mixBlendMode || 'overlay';
-                ctx.drawImage(layerCanvas, 0, 0);
-            }
+      const ctx = canvas.getContext('2d');
+
+      // Optional: Render overlays manually (only if needed)
+      const overlaySelectors = ['.light-strip', '.hologram-overlay', '.glow-effect', '.spotlight-effect'];
+      for (const selector of overlaySelectors) {
+        const cloneLayer = clone.querySelector(selector);
+        if (cloneLayer) {
+          const layerCanvas = await htmlToImage.toCanvas(cloneLayer, {
+            pixelRatio: scale,
+            backgroundColor: null
+          });
+
+          const cs = window.getComputedStyle(cloneLayer);
+          ctx.globalAlpha = parseFloat(cs.opacity) || 1;
+          ctx.globalCompositeOperation =
+            ['.light-strip', '.glow-effect'].includes(selector) ? 'lighter' : 'overlay';
+          ctx.drawImage(layerCanvas, 0, 0);
         }
+      }
 
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
+      // Reset blending
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
 
-        // 💾 Download hasil
-        const link = document.createElement('a');
-        link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+
+      // 💾 Download hasil
+      const link = document.createElement('a');
+      link.download = `nft-card-${cardTitle.value.replace(/\s+/g, '-').toLowerCase()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
 
         document.body.removeChild(wrapper);
     } catch (err) {
