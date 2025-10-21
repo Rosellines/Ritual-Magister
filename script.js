@@ -1,7 +1,7 @@
 const themes = {
   cosmic: {
     name: 'Occult Veil',
-    background: 'linear-gradient(135deg, #ba00f9 0%, #252525 50%, #e300ff 100%)',
+    background: 'linear-gradient(135deg, #000000ff 0%, #252525 50%, #e300ff 100%)',
     accent: '#d400ff',
     textColor: 'light',
     hologram: 'cosmic'
@@ -106,23 +106,42 @@ function updateCard() {
 }
 
 // Change theme
+// Change theme
 function changeTheme(themeKey) {
   currentTheme = themeKey;
   const theme = themes[themeKey];
 
   nftCard.style.background = theme.background;
-  nftCard.style.boxShadow = `0 25px 50px -12px ${theme.accent}80, 0 20px 40px -10px ${theme.accent}60, 0 15px 30px -8px ${theme.accent}40`;
 
-  // Tambahkan dynamic neon shadow di belakang kartu
+  // 🎨 Box shadow ritual versi RGBA per tema (tidak pakai accent)
+  const themeShadows = {
+    cosmic: 'rgba(170, 0, 255, 0.55)',     // ungu mistik
+    neon: 'rgba(0, 255, 180, 0.45)',       // hijau neon aura
+    ocean: 'rgba(0, 120, 255, 0.5)',       // biru dalam
+    fire: 'rgba(255, 60, 60, 0.55)',       // merah ritual
+    sunset: 'rgba(255, 0, 130, 0.5)',      // magenta ritus
+    midnight: 'rgba(100, 0, 255, 0.55)',   // violet gelap
+    royal: 'rgba(255, 180, 0, 0.5)',       // emas sihir
+    azure: 'rgba(0, 200, 255, 0.45)'       // biru lembut ethereal
+  };
+
+  const shadowColor = themeShadows[themeKey] || 'rgba(200, 0, 255, 0.5)';
+  nftCard.style.boxShadow = `
+    0 25px 50px -12px ${shadowColor},
+    0 20px 40px -10px ${shadowColor},
+    0 15px 30px -8px ${shadowColor}
+  `;
+
+  // 🔮 Dynamic glow effect
   const glowEffect = document.querySelector('.glow-effect');
   glowEffect.style.background = `
-  radial-gradient(circle at 30% 20%, ${theme.accent}33 0%, transparent 50%),
-  radial-gradient(circle at 70% 80%, ${theme.accent}22 0%, transparent 60%)
-`;
+    radial-gradient(circle at 30% 20%, ${shadowColor.replace('0.5', '0.25')} 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, ${shadowColor.replace('0.5', '0.15')} 0%, transparent 60%)
+  `;
 
   const rarityBadge = document.getElementById('displayRarity');
-  rarityBadge.style.background = `${theme.accent}40`;
-  rarityBadge.style.borderColor = `${theme.accent}60`;
+  rarityBadge.style.background = `${shadowColor.replace('0.5', '0.2')}`;
+  rarityBadge.style.borderColor = `${shadowColor.replace('0.5', '0.4')}`;
 
   // Update theme buttons
   document.querySelectorAll('.theme-btn').forEach((btn, index) => {
