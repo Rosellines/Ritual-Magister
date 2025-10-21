@@ -1,15 +1,15 @@
 const themes = {
   cosmic: {
     name: 'Occult Veil',
-    background: 'linear-gradient(135deg, #150015 0%, #3d004d 50%, #a2005e 100%)',
+    background: 'linear-gradient(135deg, #ba00f9 0%, #252525 50%, #e300ff 100%)',
     accent: '#d400ff',
     textColor: 'light',
     hologram: 'cosmic'
   },
   neon: {
     name: 'Soulfire',
-    background: 'linear-gradient(135deg, #0b0033 0%, #350058 50%, #8f00ff 100%)',
-    accent: '#00ffee',
+    background: 'linear-gradient(135deg, #000000ff 0%, #00fb18a6 50%, #000000ff 100%)',
+    accent: '#42ff0080',
     textColor: 'light',
     hologram: 'neon'
   },
@@ -22,15 +22,15 @@ const themes = {
   },
   fire: {
     name: 'Infernal Rite',
-    background: 'linear-gradient(135deg, #2b0000 0%, #7a0c00 50%, #ff4000 100%)',
-    accent: '#ff2200',
+    background: 'linear-gradient(135deg, #ff5600 0%, #cec1c0 50%, #ff4000 100%)',
+    accent: '#ff9d0080',
     textColor: 'light',
     hologram: 'fire'
   },
   sunset: {
     name: 'Eclipse Hex',
-    background: 'linear-gradient(135deg, #2b0033 0%, #440055 50%, #ff0044 100%)',
-    accent: '#d100ff',
+    background: 'linear-gradient(135deg, #ffe900 0%, #000000ff 50%, #ded800 100%)',
+    accent: '#b6d911d1',
     textColor: 'light',
     hologram: 'sunset'
   },
@@ -50,8 +50,8 @@ const themes = {
   },
   azure: {
     name: 'Specter Mist',
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    accent: '#00ffff',
+    background: 'linear-gradient(135deg, #20002c 0%, #0053e5 50%, #00cdde 100%)',
+    accent: '#00ffde80',
     textColor: 'light',
     hologram: 'azure'
   }
