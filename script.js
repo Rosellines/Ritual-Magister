@@ -1,61 +1,65 @@
 const themes = {
   cosmic: {
-    name: 'Cosmic',
-    background: 'linear-gradient(135deg, #42444aff 0%, #764ba2 50%, #f093fb 100%)',
-    accent: '#f093fb',
+    name: 'Occult Veil',
+    background: 'linear-gradient(135deg, #150015 0%, #3d004d 50%, #a2005e 100%)',
+    accent: '#d400ff',
     textColor: 'light',
     hologram: 'cosmic'
   },
   neon: {
-    name: 'Neon Cyber',
-    background: 'linear-gradient(135deg, #ffffffff 0%, #16213e 50%, #081d36ff 100%)',
-    accent: '#00d9ff',
+    name: 'Soulfire',
+    background: 'linear-gradient(135deg, #0b0033 0%, #350058 50%, #8f00ff 100%)',
+    accent: '#00ffee',
     textColor: 'light',
     hologram: 'neon'
   },
   ocean: {
-    name: 'Ocean Depths',
-    background: 'linear-gradient(135deg, #667db6  0%, #00deb1ff 50%, #ffd500ff 100%)',
-    accent: '#00ff9f',
+    name: 'Abyssal Depths',
+    background: 'linear-gradient(135deg, #000814 0%, #001d3d 50%, #003566 100%)',
+    accent: '#00b4d8',
     textColor: 'light',
     hologram: 'ocean'
   },
   fire: {
-    name: 'Flame Core',
-    background: 'linear-gradient(135deg, #fff5f6ff 0%, #ff6a88 50%, #ff416c 100%)',
-    accent: '#ff6a88',
+    name: 'Infernal Rite',
+    background: 'linear-gradient(135deg, #2b0000 0%, #7a0c00 50%, #ff4000 100%)',
+    accent: '#ff2200',
     textColor: 'light',
     hologram: 'fire'
   },
   sunset: {
-    name: 'Sunset Glow',
-    background: 'linear-gradient(135deg, #ff6e7f 0%, #60c7ffff 50%, #a23ddcff 100%)',
-    accent: '#a23ddc',
+    name: 'Eclipse Hex',
+    background: 'linear-gradient(135deg, #2b0033 0%, #440055 50%, #ff0044 100%)',
+    accent: '#d100ff',
     textColor: 'light',
     hologram: 'sunset'
   },
   midnight: {
-    name: 'Midnight',
-    background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #0084ffff 100%)',
-    accent: '#3498db',
+    name: 'Voidbound',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #161b33 50%, #2e294e 100%)',
+    accent: '#5e60ce',
     textColor: 'light',
     hologram: 'midnight'
   },
   royal: {
-    name: 'Royal Purple',
-    background: 'linear-gradient(135deg, #8e2de2 0%, #00ffda 50%, #b721ff 100%)',
-    accent: '#b721ff',
+    name: 'Witchcraft',
+    background: 'linear-gradient(135deg, #20002c 0%, #4a007d 50%, #00ffcc 100%)',
+    accent: '#9d00ff',
     textColor: 'light',
     hologram: 'royal'
   },
   azure: {
-    name: 'Azure Sky',
-    background: 'linear-gradient(135deg, #ff00ddff 0%, #001f54 50%, #0084ffff 100%)',
-    accent: '#0084ff',
+    name: 'Specter Mist',
+    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+    accent: '#00ffff',
     textColor: 'light',
     hologram: 'azure'
   }
 };
+
+// sisanya identik dengan script asli lo
+// (tidak ada perubahan fungsi, event, logika, dll)
+
 
 let currentTheme = 'cosmic';
 let mouseX = 50;
