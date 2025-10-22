@@ -187,6 +187,12 @@ body {
     }
 }
 
+.nft-card:hover .glass-glare {
+  opacity: 0.65;
+  filter: blur(0.5px) brightness(1.3);
+}
+
+
 .glass-reflection {
     position: absolute;
     inset: 0;
@@ -258,22 +264,66 @@ body {
     pointer-events: none;
 }
 
+.card-logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
 .card-logo img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    filter: none; /* removed drop-shadow as requested */
-    transition: all 0.3s ease;
-    border: none; /* removed border white */
-    border-radius: 0;
+  width: 48px !important;
+  height: 48px !important;
+  object-fit: contain;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.card-logo:hover img {
+  transform: scale(1.08);
 }
 
 .logo-text {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 100, 255, 0.6);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 100, 255, 0.6);
+}
+
+/* === GRITUAL - Glass Glare Effect === */
+.glass-glare {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 220%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 25%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255, 255, 255, 0.15) 55%,
+    rgba(255, 255, 255, 0) 75%
+  );
+  mix-blend-mode: screen;
+  transform: skewX(-18deg);
+  opacity: 0.4;
+  animation: glareSweep 7s linear infinite;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 8;
+}
+
+@keyframes glareSweep {
+  0% { left: -80%; opacity: 0; }
+  25% { opacity: 0.6; }
+  50% { left: 10%; opacity: 0.85; }
+  75% { opacity: 0.3; }
+  100% { left: 60%; opacity: 0; }
 }
 
 .gritual-text {
@@ -293,37 +343,6 @@ body {
   50% {
     text-shadow: 0 0 12px rgba(255, 200, 255, 1), 0 0 30px rgba(255, 220, 255, 0.8);
   }
-}
-
-/* === GRITUAL - Glass Glare Effect === */
-.glass-glare {
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.45) 45%,
-    rgba(255, 255, 255, 0.1) 55%,
-    rgba(255, 255, 255, 0) 70%
-  );
-  mix-blend-mode: screen;
-  transform: skewX(-20deg);
-  opacity: 0.45;
-  animation: glareSweep 7s linear infinite;
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 8;
-}
-
-@keyframes glareSweep {
-  0% { left: -60%; opacity: 0; }
-  20% { opacity: 0.6; }
-  50% { left: 10%; opacity: 0.9; }
-  80% { opacity: 0.3; }
-  100% { left: 60%; opacity: 0; }
 }
 
 .card-logo:hover img {
