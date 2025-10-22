@@ -259,8 +259,8 @@ body {
 }
 
 .card-logo img {
-    width: 100%;
-    height: 100%;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
     filter: none; /* removed drop-shadow as requested */
     transition: all 0.3s ease;
