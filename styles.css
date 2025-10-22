@@ -295,6 +295,37 @@ body {
   }
 }
 
+/* === GRITUAL - Glass Glare Effect === */
+.glass-glare {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.45) 45%,
+    rgba(255, 255, 255, 0.1) 55%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  mix-blend-mode: screen;
+  transform: skewX(-20deg);
+  opacity: 0.45;
+  animation: glareSweep 7s linear infinite;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 8;
+}
+
+@keyframes glareSweep {
+  0% { left: -60%; opacity: 0; }
+  20% { opacity: 0.6; }
+  50% { left: 10%; opacity: 0.9; }
+  80% { opacity: 0.3; }
+  100% { left: 60%; opacity: 0; }
+}
+
 .card-logo:hover img {
     transform: scale(1.1);
     /* no extra drop-shadow on hover */
