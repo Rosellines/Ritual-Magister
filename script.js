@@ -119,8 +119,8 @@ function changeTheme(themeKey) {
     ocean: 'rgba(0, 120, 255, 0.5)',       // biru dalam
     fire: 'rgba(255, 144, 39, 1)',       // merah ritual
     sunset: 'rgba(255, 196, 0, 1)',      // magenta ritus
-    midnight: 'rgba(100, 0, 255, 0.55)',   // violet gelap
-    royal: 'rgba(0, 255, 255, 0.82)',       // emas sihir
+    midnight: 'rgba(175, 175, 175, 1)',   // violet gelap
+    royal: 'rgba(174, 0, 255, 1)',       // emas sihir
     azure: 'rgba(0, 200, 255, 0.45)'       // biru lembut ethereal
   };
 
