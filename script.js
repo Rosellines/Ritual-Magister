@@ -36,14 +36,14 @@ const themes = {
   },
   midnight: {
     name: 'Voidbound',
-    background: 'linear-gradient(135deg, #0a0a0a 0%, #161b33 50%, #2e294e 100%)',
-    accent: '#5e60ce',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #ffffffff 50%, #000000ff 100%)',
+    accent: '#c0c0c0ff',
     textColor: 'light',
     hologram: 'midnight'
   },
   royal: {
     name: 'Witchcraft',
-    background: 'linear-gradient(135deg, #20002c 0%, #4a007d 50%, #00ffcc 100%)',
+    background: 'linear-gradient(135deg, #000000ff 0%, #ad52ce 50%, #000000ff 100%)',
     accent: '#9d00ff',
     textColor: 'light',
     hologram: 'royal'
@@ -106,7 +106,6 @@ function updateCard() {
 }
 
 // Change theme
-// Change theme
 function changeTheme(themeKey) {
   currentTheme = themeKey;
   const theme = themes[themeKey];
@@ -118,10 +117,10 @@ function changeTheme(themeKey) {
     cosmic: 'rgba(170, 0, 255, 0.55)',     // ungu mistik
     neon: 'rgba(0, 255, 180, 0.45)',       // hijau neon aura
     ocean: 'rgba(0, 120, 255, 0.5)',       // biru dalam
-    fire: 'rgba(255, 60, 60, 0.55)',       // merah ritual
-    sunset: 'rgba(255, 0, 130, 0.5)',      // magenta ritus
+    fire: 'rgba(255, 144, 39, 1)',       // merah ritual
+    sunset: 'rgba(255, 196, 0, 1)',      // magenta ritus
     midnight: 'rgba(100, 0, 255, 0.55)',   // violet gelap
-    royal: 'rgba(255, 180, 0, 0.5)',       // emas sihir
+    royal: 'rgba(0, 255, 255, 0.82)',       // emas sihir
     azure: 'rgba(0, 200, 255, 0.45)'       // biru lembut ethereal
   };
 
