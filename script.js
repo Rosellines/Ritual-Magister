@@ -227,35 +227,107 @@ function changeFont(font) {
   nftCard.style.fontFamily = fonts[font] || fonts.orbitron;
 }
 
-// Mouse move effect
-nftCard.addEventListener('mousemove', (e) => {
-  const rect = nftCard.getBoundingClientRect();
-  mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-  mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+/* ------------------
+   PERFORMANCE + THICKENING CHANGES START
+   (requestAnimationFrame caching + thickening effect)
+   ------------------ */
 
-  const spotlightEffect = document.querySelector('.spotlight-effect');
-  const theme = themes[currentTheme];
-  spotlightEffect.style.background = `radial-gradient(circle 200px at ${mouseX}% ${mouseY}%, ${theme.accent}30 0%, transparent 70%)`;
+// We'll cache rect and use rAF for mousemove updates to make it lighter
+let cachedRect = null;
+let rafId = null;
+let target = { mouseX: 50, mouseY: 50 };
+let isThick = false;
 
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
-  const mouseXPos = e.clientX - rect.left;
-  const mouseYPos = e.clientY - rect.top;
+function updateRect() {
+  cachedRect = nftCard.getBoundingClientRect();
+}
+
+function scheduleTransformUpdate() {
+  if (rafId) return;
+  rafId = requestAnimationFrame(() => {
+    rafId = null;
+    applyTransform();
+  });
+}
+
+function applyTransform() {
+  if (!cachedRect) updateRect();
+
+  const centerX = cachedRect.width / 2;
+  const centerY = cachedRect.height / 2;
+  const mouseXPos = (target.mouseX / 100) * cachedRect.width;
+  const mouseYPos = (target.mouseY / 100) * cachedRect.height;
   const rotateX = ((mouseYPos - centerY) / centerY) * 10;
   const rotateY = ((centerX - mouseXPos) / centerX) * 10;
 
-  nftCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+  const spotlightEffect = document.querySelector('.spotlight-effect');
+  const theme = themes[currentTheme];
+  spotlightEffect.style.background = `radial-gradient(circle 200px at ${target.mouseX}% ${target.mouseY}%, ${theme.accent}30 0%, transparent 70%)`;
+
+  // base transform
+  let transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+  if (isThick) {
+    // penebalan: stronger shadow, subtle border, slight translateZ
+    nftCard.style.boxShadow = `0 45px 90px -18px ${theme.accent}aa, 0 30px 60px -30px ${theme.accent}88, 0 28px 56px -40px rgba(0,0,0,0.6)`;
+    nftCard.style.border = `3px solid rgba(255,255,255,0.06)`;
+    transform += ' translateZ(8px)';
+  }
+
+  nftCard.style.transform = transform;
+}
+
+/* ------------------
+   PERFORMANCE + THICKENING CHANGES END
+   ------------------ */
+
+/* Modified event listeners to use the rAF batching above */
+
+nftCard.addEventListener('mousemove', (e) => {
+  if (!cachedRect) updateRect();
+  const rect = cachedRect;
+  const newMouseX = ((e.clientX - rect.left) / rect.width) * 100;
+  const newMouseY = ((e.clientY - rect.top) / rect.height) * 100;
+  target.mouseX = Math.max(0, Math.min(100, newMouseX));
+  target.mouseY = Math.max(0, Math.min(100, newMouseY));
+  scheduleTransformUpdate();
 });
 
 nftCard.addEventListener('mouseenter', () => {
-  nftCard.style.transition = 'transform 0.1s ease-out';
+  updateRect();
+  nftCard.style.transition = 'transform 0.1s ease-out, box-shadow 0.12s ease-out, border 0.12s ease-out';
+  isThick = true;
 });
 
 nftCard.addEventListener('mouseleave', () => {
-  nftCard.style.transition = 'transform 0.5s ease-out';
+  nftCard.style.transition = 'transform 0.5s ease-out, box-shadow 0.5s ease-out, border 0.3s ease-out';
   nftCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
   mouseX = 50;
   mouseY = 50;
+  // revert to theme default shadow & remove border
+  const theme = themes[currentTheme];
+  // recreate original shadow mapping used in changeTheme (approx)
+  const themeShadows = {
+    cosmic: 'rgba(170, 0, 255, 0.55)',
+    neon: 'rgba(0, 255, 180, 0.45)',
+    ocean: 'rgba(0, 120, 255, 0.5)',
+    fire: 'rgba(255, 144, 39, 1)',
+    sunset: 'rgba(255, 196, 0, 1)',
+    midnight: 'rgba(175, 175, 175, 1)',
+    royal: 'rgba(174, 0, 255, 1)',
+    azure: 'rgba(0, 200, 255, 0.45)'
+  };
+  const shadowColor = themeShadows[currentTheme] || 'rgba(200, 0, 255, 0.5)';
+  nftCard.style.boxShadow = `
+    0 25px 50px -12px ${shadowColor},
+    0 20px 40px -10px ${shadowColor},
+    0 15px 30px -8px ${shadowColor}
+  `;
+  nftCard.style.border = 'none';
+  isThick = false;
+  const spotlightEffect = document.querySelector('.spotlight-effect');
+  if (spotlightEffect) spotlightEffect.style.background = 'none';
+  cachedRect = null;
 });
 
 // Function to copy image to clipboard
@@ -481,7 +553,8 @@ downloadBtn.addEventListener('click', async () => {
   downloadBtn.disabled = true;
 
   try {
-    const scale = 4;
+    // default pixelRatio lowered to 2 for performance (keeps result decent and faster)
+    const scale = 2;
     const rect = nftCard.getBoundingClientRect();
     const fixedWidth = Math.round(rect.width);
     const fixedHeight = Math.round(rect.height);
@@ -584,8 +657,40 @@ downloadBtn.addEventListener('click', async () => {
     // Remove wrapper from DOM
     document.body.removeChild(wrapper);
 
+    // AFTER download: copy text + image to clipboard and open X compose
+    const tweetText = `Check out my NFT Card: ${cardTitle.value}!\n\n✨ Created with NFT Card Generator\n\n#NFT #Card`;
+    try {
+      await navigator.clipboard.writeText(tweetText);
+    } catch (err) {
+      console.warn('Failed to copy text to clipboard:', err);
+    }
+
+    // copy image blob if possible
+    const copied = await copyImageToClipboard(blob);
+
+    // Try Web Share API as an extra option (mobile)
+    let sharedViaNavigatorShare = false;
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'image/png' })] })) {
+        await navigator.share({
+          files: [new File([blob], fileName, { type: 'image/png' })],
+          text: tweetText
+        });
+        sharedViaNavigatorShare = true;
+      }
+    } catch (err) {
+      sharedViaNavigatorShare = false;
+    }
+
     // Show preview popup after download with blob
     showPreviewPopup(imageDataUrl, fileName, blob);
+
+    // If Web Share didn't run, open X / Twitter compose intent with prefilled text.
+    // NOTE: You cannot attach image via intent; user must paste (Ctrl+V) to attach image from clipboard manually.
+    if (!sharedViaNavigatorShare) {
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+      window.open(tweetUrl, '_blank');
+    }
 
   } catch (err) {
     console.error('Render Error:', err);
@@ -605,6 +710,11 @@ cardNumber.addEventListener('input', updateCard);
 cardOwner.addEventListener('input', updateCard);
 themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
 fontSelect.addEventListener('change', (e) => changeFont(e.target.value));
+
+// ensure rect updated on window resize so hotspot remains correct
+window.addEventListener('resize', () => {
+  if (document.activeElement === nftCard || nftCard.matches(':hover')) updateRect();
+});
 
 // Initialize
 initThemeButtons();
