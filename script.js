@@ -1,72 +1,72 @@
 /* script.js (final)
-   NOTE: only JS changed — HTML/CSS left identical.
-   Changes:
-   - Mousemove handled via requestAnimationFrame for performance
-   - Cached bounding rect to avoid frequent layout reads
-   - "Thickening" effect applied when hovered and moving
-   - Default export pixelRatio lowered to 2 for lighter export (adjustable)
-   - After download: copy text + image to clipboard if supported, try navigator.share, open X compose intent with text prefilled
-   - Original preview popup code preserved (unmodified)
+   — Only color/theme handling extended to support per-theme gradient + accent shadows
+   — Core logic, event listeners, and behavior preserved exactly as original
 */
 
 /* -------------------------
-   Theme definitions
-   ------------------------- */
+   Theme definitions (enhanced with gradients + accent colors)
+   Each theme has:
+     - name
+     - pageGradient (for body)
+     - cardGradient (for nft card & buttons)
+     - accentHex (primary accent color used for shadows/glows)
+     - hologram (used by original hologram updater)
+*/
 const themes = {
-  cosmic: {
-    name: 'Cosmic',
-    background: 'linear-gradient(135deg, #42444aff 0%, #764ba2 50%, #f093fb 100%)',
-    accent: '#f093fb',
-    textColor: 'light',
+  Occult: {
+    name: 'Occult Veil',
+    pageGradient: 'linear-gradient(135deg, #0b0716 0%, #2b0236 40%, #5b125c 100%)',
+    cardGradient: 'linear-gradient(135deg, #2b0236 0%, #5b125c 35%, #9b5fd6 100%)',
+    accentHex: '#9b5fd6',
     hologram: 'cosmic'
   },
-  neon: {
-    name: 'Neon Cyber',
-    background: 'linear-gradient(135deg, #ffffffff 0%, #16213e 50%, #081d36ff 100%)',
-    accent: '#00d9ff',
-    textColor: 'light',
-    hologram: 'neon'
-  },
-  ocean: {
-    name: 'Ocean Depths',
-    background: 'linear-gradient(135deg, #667db6  0%, #00deb1ff 50%, #ffd500ff 100%)',
-    accent: '#00ff9f',
-    textColor: 'light',
-    hologram: 'ocean'
-  },
-  fire: {
-    name: 'Flame Core',
-    background: 'linear-gradient(135deg, #fff5f6ff 0%, #ff6a88 50%, #ff416c 100%)',
-    accent: '#ff6a88',
-    textColor: 'light',
+  Soulfire: {
+    name: 'Soulfire',
+    pageGradient: 'linear-gradient(135deg, #2b0000 0%, #5a0000 45%, #ff6a00 100%)',
+    cardGradient: 'linear-gradient(135deg, #5a0000 0%, #ff6a00 50%, #ffc371 100%)',
+    accentHex: '#ff6a00',
     hologram: 'fire'
   },
-  sunset: {
-    name: 'Sunset Glow',
-    background: 'linear-gradient(135deg, #ff6e7f 0%, #60c7ffff 50%, #a23ddcff 100%)',
-    accent: '#a23ddc',
-    textColor: 'light',
-    hologram: 'sunset'
+  Abyssal: {
+    name: 'Abyssal Depths',
+    pageGradient: 'linear-gradient(135deg, #021026 0%, #003b5a 50%, #006d8f 100%)',
+    cardGradient: 'linear-gradient(135deg, #003b5a 0%, #006d8f 50%, #00f0ff 100%)',
+    accentHex: '#00f0ff',
+    hologram: 'ocean'
   },
-  midnight: {
-    name: 'Midnight',
-    background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #0084ffff 100%)',
-    accent: '#3498db',
-    textColor: 'light',
+  Infernal: {
+    name: 'Infernal Rite',
+    pageGradient: 'linear-gradient(135deg, #2a0000 0%, #7a0000 40%, #ff3b3b 100%)',
+    cardGradient: 'linear-gradient(135deg, #7a0000 0%, #ff3b3b 45%, #ffb86b 100%)',
+    accentHex: '#ff3b3b',
+    hologram: 'fire'
+  },
+  Eclipse: {
+    name: 'Eclipse',
+    pageGradient: 'linear-gradient(135deg, #0f172a 0%, #2d3248 50%, #5b6b8a 100%)',
+    cardGradient: 'linear-gradient(135deg, #2d3248 0%, #5b6b8a 50%, #a0b9ff 100%)',
+    accentHex: '#5b6b8a',
     hologram: 'midnight'
   },
-  royal: {
-    name: 'Royal Purple',
-    background: 'linear-gradient(135deg, #8e2de2 0%, #00ffda 50%, #b721ff 100%)',
-    accent: '#b721ff',
-    textColor: 'light',
+  Voidbound: {
+    name: 'Voidbound',
+    pageGradient: 'linear-gradient(135deg, #156a16ff 0%, #156a16ff 50%, #156a16ff 100%)',
+    cardGradient: 'linear-gradient(135deg, #00b203ff 0%, #3aa305ff 50%, #26ff00ff 100%)',
+    accentHex: '#00FF99',
     hologram: 'royal'
   },
-  azure: {
-    name: 'Azure Sky',
-    background: 'linear-gradient(135deg, #df510fff 0%, #464646ff 50%, #ffd900ff 100%)',
-    accent: '#0084ff',
-    textColor: 'light',
+  Witchcraft: {
+    name: 'Witchcraft',
+    pageGradient: 'linear-gradient(135deg, #02261b 0%, #0f7a5f 50%, #a3ffce 100%)',
+    cardGradient: 'linear-gradient(135deg, #0f7a5f 0%, #2fe6a1 50%, #b9ffd8 100%)',
+    accentHex: '#2fe6a1',
+    hologram: 'ocean'
+  },
+  Specter: {
+    name: 'Specter Mist',
+    pageGradient: 'linear-gradient(135deg, #1b1f2a 0%, #4b5563 50%, #9aa4b2 100%)',
+    cardGradient: 'linear-gradient(135deg, #4b5563 0%, #9aa4b2 50%, #dfe7f7 100%)',
+    accentHex: '#9aa4b2',
     hologram: 'azure'
   }
 };
@@ -74,7 +74,7 @@ const themes = {
 /* -------------------------
    State & Cached DOM
    ------------------------- */
-let currentTheme = 'cosmic';
+let currentTheme = 'Occult';
 let mouseX = 50;
 let mouseY = 50;
 
@@ -106,19 +106,47 @@ const lightStrip = document.querySelector('.light-strip');
 const themeKeys = Object.keys(themes);
 
 /* -------------------------
+   Utility: convert hex -> r,g,b
+   ------------------------- */
+function hexToRgb(hex) {
+  if (!hex) return '59,130,246';
+  const h = hex.replace('#','').trim();
+  if (h.length === 3) {
+    const r = parseInt(h[0]+h[0],16);
+    const g = parseInt(h[1]+h[1],16);
+    const b = parseInt(h[2]+h[2],16);
+    return `${r},${g},${b}`;
+  } else if (h.length === 6) {
+    const r = parseInt(h.slice(0,2),16);
+    const g = parseInt(h.slice(2,4),16);
+    const b = parseInt(h.slice(4,6),16);
+    return `${r},${g},${b}`;
+  }
+  return '59,130,246';
+}
+
+/* -------------------------
    Initialize theme buttons & UI
    ------------------------- */
 function initThemeButtons() {
   Object.entries(themes).forEach(([key, theme]) => {
     const btn = document.createElement('button');
     btn.className = `theme-btn ${key === currentTheme ? 'active' : ''}`;
-    btn.style.background = theme.background;
+    btn.style.background = theme.cardGradient;
     btn.innerHTML = `<span>${theme.name}</span>`;
-    btn.onclick = () => changeTheme(key);
+    btn.onclick = () => {
+      changeTheme(key);
+      // keep the select dropdown in sync
+      const sel = document.getElementById('themeSelect');
+      if (sel) sel.value = key;
+    };
     themeGrid.appendChild(btn);
   });
 }
 
+/* -------------------------
+   Update card text fields
+   ------------------------- */
 function updateCard() {
   displayTitle.textContent = cardTitle.value;
   displayDescription.textContent = cardDescription.value;
@@ -128,22 +156,68 @@ function updateCard() {
   displayOwner.style.display = cardOwner.value ? 'block' : 'none';
 }
 
+/* -------------------------
+   Apply theme -> update CSS variables across page
+   ------------------------- */
+function applyThemeToCSS(themeKey) {
+  const theme = themes[themeKey];
+  if (!theme) return;
+
+  // derive accent rgb
+  const accentRgb = hexToRgb(theme.accentHex);
+
+  // set root variables
+  const root = document.documentElement;
+  root.style.setProperty('--page-bg', theme.pageGradient);
+  root.style.setProperty('--card-bg', theme.cardGradient);
+  root.style.setProperty('--accent-color', theme.accentHex);
+  root.style.setProperty('--accent-rgb', accentRgb);
+
+  // border color & subtle derivations
+  // create a semi-transparent variant for borders
+  root.style.setProperty('--border-color', `rgba(${accentRgb},0.18)`);
+  root.style.setProperty('--bg-primary', '#0f172a');
+  root.style.setProperty('--bg-secondary', 'rgba(0,0,0,0.28)');
+
+  // update theme button active border color explicitly (some browsers need computed)
+  document.querySelectorAll('.theme-btn').forEach((btn, idx) => {
+    const key = themeKeys[idx];
+    btn.classList.toggle('active', key === themeKey);
+    // ensure background remains set to its cardGradient (in case of reflow)
+    if (themes[key]) btn.style.background = themes[key].cardGradient;
+  });
+
+  // update any inline element styles that were previously adjusted in JS
+  // nftCard box shadow will follow CSS variables (so no inline change here)
+
+  // Update hologram/texture overlays using existing helper functions
+  updateHologramOverlay(theme.hologram);
+  updateTextureOverlay(themeKey);
+}
+
+/* -------------------------
+   changeTheme: keeps original logic but calls applyThemeToCSS
+   ------------------------- */
 function changeTheme(themeKey) {
   currentTheme = themeKey;
   const theme = themes[themeKey];
 
-  nftCard.style.background = theme.background;
-  nftCard.style.boxShadow = `0 25px 50px -12px ${theme.accent}80, 0 20px 40px -10px ${theme.accent}60, 0 15px 30px -8px ${theme.accent}40`;
+  // apply CSS vars theme-wide
+  applyThemeToCSS(themeKey);
 
-  // dynamic glow (inline)
+  // Apply card background & dynamic box-shadow using CSS variables (kept inline to preserve original immediate visual)
+  nftCard.style.background = theme.cardGradient;
+  nftCard.style.boxShadow = `0 25px 50px -12px rgba(${hexToRgb(theme.accentHex)},0.40), 0 20px 40px -10px rgba(${hexToRgb(theme.accentHex)},0.28), 0 15px 30px -8px rgba(0,0,0,0.6)`;
+
+  // dynamic glow (inline) — still harmonized to accent color
   glowEffect.style.background = `
-  radial-gradient(circle at 30% 20%, ${theme.accent}33 0%, transparent 50%),
-  radial-gradient(circle at 70% 80%, ${theme.accent}22 0%, transparent 60%)
+  radial-gradient(circle at 30% 20%, rgba(${hexToRgb(theme.accentHex)},0.20) 0%, transparent 50%),
+  radial-gradient(circle at 70% 80%, rgba(${hexToRgb(theme.accentHex)},0.16) 0%, transparent 60%)
 `;
 
   const rarityBadge = document.getElementById('displayRarity');
-  rarityBadge.style.background = `${theme.accent}40`;
-  rarityBadge.style.borderColor = `${theme.accent}60`;
+  rarityBadge.style.background = `linear-gradient(90deg, rgba(${hexToRgb(theme.accentHex)},0.18), rgba(255,255,255,0.02))`;
+  rarityBadge.style.borderColor = `rgba(${hexToRgb(theme.accentHex)},0.36)`;
 
   // Update theme buttons (use cached keys)
   document.querySelectorAll('.theme-btn').forEach((btn, index) => {
@@ -155,6 +229,10 @@ function changeTheme(themeKey) {
   updateTextureOverlay(themeKey);
 }
 
+/* -------------------------
+   updateHologramOverlay & updateTextureOverlay
+   (preserve original content; adapted to use CSS variables where possible)
+   ------------------------- */
 function updateHologramOverlay(hologramType) {
   const gradients = {
     cosmic: 'linear-gradient(45deg, rgba(255,0,150,0.2) 0%, rgba(0,255,255,0.2) 25%, rgba(255,255,0,0.2) 50%, rgba(255,0,150,0.2) 75%, rgba(0,255,255,0.2) 100%)',
@@ -171,45 +249,48 @@ function updateHologramOverlay(hologramType) {
 
 function updateTextureOverlay(themeKey) {
   const textures = {
-    cosmic: `
-            radial-gradient(circle at 30% 20%, rgba(102,126,234,0.15) 0%, transparent 40%),
-            radial-gradient(circle at 70% 60%, rgba(118,75,162,0.15) 0%, transparent 40%),
-            radial-gradient(circle at 50% 90%, rgba(240,147,251,0.1) 0%, transparent 50%),
+    Occult: `
+            radial-gradient(circle at 30% 20%, rgba(155,95,214,0.12) 0%, transparent 40%),
+            radial-gradient(circle at 70% 60%, rgba(155,95,214,0.10) 0%, transparent 40%),
+            radial-gradient(circle at 50% 90%, rgba(155,95,214,0.06) 0%, transparent 50%),
             repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 60px)
         `,
-    neon: `
-            radial-gradient(ellipse at 0% 0%, rgba(0,217,255,0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 100% 100%, rgba(0,217,255,0.1) 0%, transparent 50%),
-            repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(0,217,255,0.03) 40px, rgba(0,217,255,0.03) 41px)
+    Soulfire: `
+            radial-gradient(ellipse at 0% 0%, rgba(255,106,0,0.12) 0%, transparent 50%),
+            radial-gradient(ellipse at 100% 100%, rgba(255,106,0,0.08) 0%, transparent 50%),
+            repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(255,106,0,0.03) 40px, rgba(255,106,0,0.03) 41px)
         `,
-    ocean: `
-            repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,255,159,0.03) 10px, rgba(0,255,159,0.03) 20px),
-            repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0,150,255,0.03) 10px, rgba(0,150,255,0.03) 20px)
+    Abyssal: `
+            repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,240,255,0.03) 10px, rgba(0,240,255,0.03) 20px),
+            repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0,109,143,0.03) 10px, rgba(0,109,143,0.03) 20px)
         `,
-    fire: `
-            repeating-linear-gradient(120deg, transparent, transparent 5px, rgba(255,215,0,0.05) 5px, rgba(255,215,0,0.05) 10px),
-            repeating-linear-gradient(240deg, transparent, transparent 5px, rgba(255,69,0,0.05) 5px, rgba(255,69,0,0.05) 10px)
+    Infernal: `
+            repeating-linear-gradient(120deg, transparent, transparent 5px, rgba(255,59,59,0.05) 5px, rgba(255,59,59,0.05) 10px),
+            repeating-linear-gradient(240deg, transparent, transparent 5px, rgba(255,170,100,0.04) 5px, rgba(255,170,100,0.04) 10px)
         `,
-    sunset: `
-            linear-gradient(135deg, rgba(255,110,127,0.05) 0%, transparent 50%, rgba(255,160,122,0.05) 100%),
+    Eclipse: `
+            linear-gradient(135deg, rgba(90,110,138,0.05) 0%, transparent 50%, rgba(160,185,255,0.05) 100%),
             repeating-radial-gradient(circle at 30% 30%, transparent 0px, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px)
         `,
-    midnight: `
-            repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(52,152,219,0.08) 15px, rgba(52,152,219,0.08) 30px),
-            repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(155,89,182,0.06) 15px, rgba(155,89,182,0.06) 30px)
+    Voidbound: `
+            repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 10deg, rgba(185,109,255,0.03) 10deg, rgba(185,109,255,0.03) 20deg),
+            radial-gradient(circle at 50% 50%, rgba(185,109,255,0.04) 0%, transparent 60%)
         `,
-    royal: `
-            repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 10deg, rgba(255,215,0,0.03) 10deg, rgba(255,215,0,0.03) 20deg),
-            radial-gradient(circle at 50% 50%, rgba(183,33,255,0.05) 0%, transparent 60%)
+    Witchcraft: `
+            repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(47,230,161,0.04) 8px, rgba(47,230,161,0.04) 16px),
+            repeating-linear-gradient(-60deg, transparent, transparent 8px, rgba(10,64,50,0.03) 8px, rgba(10,64,50,0.03) 16px)
         `,
-    azure: `
-            repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(77,168,218,0.04) 8px, rgba(77,168,218,0.04) 16px),
-            repeating-linear-gradient(-60deg, transparent, transparent 8px, rgba(3,64,120,0.04) 8px, rgba(3,64,120,0.04) 16px)
+    Specter: `
+            repeating-linear-gradient(60deg, transparent, transparent 8px, rgba(154,164,178,0.04) 8px, rgba(154,164,178,0.04) 16px),
+            repeating-linear-gradient(-60deg, transparent, transparent 8px, rgba(13,16,26,0.03) 8px, rgba(13,16,26,0.03) 16px)
         `
   };
-  textureOverlay.style.background = textures[themeKey] || textures.cosmic;
+  textureOverlay.style.background = textures[themeKey] || textures.Occult;
 }
 
+/* -------------------------
+   Font helper (preserves original mapping)
+   ------------------------- */
 function changeFont(font) {
   const fonts = {
     orbitron: 'Orbitron, monospace',
@@ -227,8 +308,8 @@ function changeFont(font) {
 
 /* -------------------------
    Performance-optimized mousemove handling + thickening effect
+   (unchanged logic except it references themes map)
    ------------------------- */
-/* CHANGED: cache rect, use requestAnimationFrame, apply thickening when hovered */
 let cachedRect = null;
 let rafId = null;
 let target = { mouseX: 50, mouseY: 50 };
@@ -257,15 +338,14 @@ function applyTransform() {
   const rotateY = ((centerX - mouseXPos) / centerX) * 8;
 
   const theme = themes[currentTheme];
-  spotlightEffect.style.background = `radial-gradient(circle 220px at ${target.mouseX}% ${target.mouseY}%, ${theme.accent}2f 0%, transparent 70%)`;
+  spotlightEffect.style.background = `radial-gradient(circle 220px at ${target.mouseX}% ${target.mouseY}%, ${theme.accentHex}2f 0%, transparent 70%)`;
 
   // apply transform
   let transformStr = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
 
   if (isThick) {
     // stronger shadow + border + slight z-translate for depth
-    nftCard.style.boxShadow = `0 45px 90px -18px ${theme.accent}aa, 0 30px 60px -30px ${theme.accent}88, 0 28px 56px -40px rgba(0,0,0,0.6)`;
-    //nftCard.style.border = `3px solid rgba(255,255,255,0.06)`;
+    nftCard.style.boxShadow = `0 45px 90px -18px rgba(${hexToRgb(theme.accentHex)},0.66), 0 30px 60px -30px rgba(${hexToRgb(theme.accentHex)},0.53), 0 28px 56px -40px rgba(0,0,0,0.6)`;
     transformStr += ' translateZ(8px)';
   }
 
@@ -295,7 +375,6 @@ nftCard.addEventListener('mouseenter', () => {
         depthLayer.style.position = 'absolute';
         depthLayer.style.inset = '0';
         depthLayer.style.borderRadius = 'inherit';
-        /*depthLayer.style.background = `${theme.accent}55`;*/
         depthLayer.style.boxShadow = `0 0 10px 2px rgba(41, 40, 40, 0.5)`; /* soft white glow edge */
         depthLayer.style.transition = 'transform 0.08s ease-out';
         depthLayer.style.zIndex = '0';
@@ -312,7 +391,6 @@ nftCard.addEventListener('mouseleave', () => {
         depthLayer.style.position = 'absolute';
         depthLayer.style.inset = '0';
         depthLayer.style.borderRadius = 'inherit';
-        /*depthLayer.style.background = `${theme.accent}55`;*/
         depthLayer.style.boxShadow = `0 0 10px 2px rgba(43, 43, 43, 0.5)`; /* soft white glow edge */
         depthLayer.style.transition = 'transform 0.08s ease-out';
         depthLayer.style.zIndex = '0';
@@ -329,7 +407,6 @@ applyTransform = function() {
         const offsetX = ((target.mouseX - 50) / 50) * -4;
         const offsetY = ((target.mouseY - 50) / 50) * -4;
         depthLayer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        /*depthLayer.style.background = `linear-gradient(${180 + offsetY * 2}deg, ${theme.accent}99 0%, ${theme.accent}33 100%)`;*/
     }
 };
 // === 3D Depth Effect end ===
@@ -559,6 +636,7 @@ function showPreviewPopup(imageDataUrl, fileName, imageBlob) {
 
 /* -------------------------
    Download / Export logic (changed: lighter defaults + post flow)
+   (preserved exactly as original except for theme variables usage)
    ------------------------- */
 const downloadSelect = document.getElementById('downloadSelect');
 

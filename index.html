@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NFT Card Generator - GRITUAL Edition</title>
   <meta name="description" content="Create stunning holographic NFT cards with custom mystical effects">
   <link rel="stylesheet" href="styles.css">
@@ -30,15 +30,15 @@
               <option value="Ancient Relic">Ancient Relic</option>
               <option value="Void Amulet">Void Amulet</option>
               <option value="Astral Codex">Astral Codex</option>
-              <option value="Dark Sigil">Dark Sigil</option>
+              <option value="Dark Sigil" selected>Dark Sigil</option>
               <option value="Rune of Eternity">Rune of Eternity</option>
-              <option value="Mystic artifact" selected>Mystic artifact</option>
+              <option value="Mystic artifact">Mystic artifact</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="cardDescription">Description</label>
-            <input type="text" id="cardDescription" value="A timeless legacy that listens to silence." placeholder="Enter card description">
+            <input type="text" id="cardDescription" value="In the stillness of night, this symbol pulses like the heart of a forgotten world." placeholder="Enter card description">
           </div>
 
           <div class="form-row">
@@ -60,7 +60,7 @@
 
             <div class="form-group">
               <label for="cardNumber">Card Number</label>
-              <input type="text" id="cardNumber" value="#001" placeholder="#001">
+              <input type="text" id="cardNumber" value="#002" placeholder="#002">
             </div>
           </div>
 
@@ -72,14 +72,14 @@
           <div class="form-group">
             <label for="themeSelect">Theme</label>
             <select id="themeSelect">
-              <option value="cosmic" selected>Occult Veil</option>
-              <option value="neon">Soulfire</option>
-              <option value="ocean">Abyssal Depths</option>
-              <option value="fire">Infernal Rite</option>
-              <option value="sunset">Eclipse Hex</option>
-              <option value="midnight">Voidbound</option>
-              <option value="royal">Witchcraft</option>
-              <option value="azure">Specter Mist</option>
+              <option value="Occult" selected>Occult Veil</option>
+              <option value="Soulfire">Soulfire</option>
+              <option value="Abyssal">Abyssal Depths</option>
+              <option value="Infernal">Infernal Rite</option>
+              <option value="Eclipse">Eclipse</option>
+              <option value="Voidbound">Voidbound</option>
+              <option value="Witchcraft">Witchcraft</option>
+              <option value="Specter">Specter Mist</option>
             </select>
           </div>
 
@@ -124,7 +124,7 @@
           </div>
 
           <div class="card-header">
-            <span id="displayNumber" class="card-number">#001</span>
+            <span id="displayNumber" class="card-number">#002</span>
             <span id="displayOwner" class="card-owner"></span>
           </div>
 
