@@ -837,5 +837,22 @@ window.addEventListener('resize', () => {
 initThemeButtons();
 updateCard();
 changeTheme(currentTheme);
+function initThemeButtons() {
+  const themeCircles = document.getElementById('themeCircles');
+  themeCircles.innerHTML = ''; // kosongin isi lama
+  Object.entries(themes).forEach(([key, theme]) => {
+    const circle = document.createElement('div');
+    circle.className = `theme-circle ${key === currentTheme ? 'active' : ''}`;
+    circle.style.background = theme.cardGradient;
+    circle.onclick = () => {
+      changeTheme(key);
+      const sel = document.getElementById('themeSelect');
+      if (sel) sel.value = key;
+      document.querySelectorAll('.theme-circle').forEach(c => c.classList.remove('active'));
+      circle.classList.add('active');
+    };
+    themeCircles.appendChild(circle);
+  });
+}
 
 /* End of script.js */

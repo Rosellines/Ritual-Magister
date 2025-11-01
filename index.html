@@ -29,8 +29,8 @@
               <option value="Celestial Charm">Celestial Charm</option>
               <option value="Ancient Relic">Ancient Relic</option>
               <option value="Void Amulet">Void Amulet</option>
-              <option value="Astral Codex">Astral Codex</option>
-              <option value="Dark Sigil" selected>Dark Sigil</option>
+              <option value="Astral Codex" selected>Astral Codex</option>
+              <option value="Dark Sigil">Dark Sigil</option>
               <option value="Rune of Eternity">Rune of Eternity</option>
               <option value="Mystic artifact">Mystic artifact</option>
             </select>
@@ -38,19 +38,19 @@
 
           <div class="form-group">
             <label for="cardDescription">Description</label>
-            <input type="text" id="cardDescription" value="In the stillness of night, this symbol pulses like the heart of a forgotten world." placeholder="Enter card description">
+            <input type="text" id="cardDescription" value="the awakening of hidden knowledge and inner power." placeholder="Enter card description">
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="cardRarity">Rarity</label>
               <select id="cardRarity">
-                <option value="Radiant Ritualist - Divine">Radiant Ritualist - Divine</option>
+                <option value="Radiant Ritualist - Divine"selected>Radiant Ritualist - Divine</option>
                 <option value="Ritualist - Mythic">Ritualist - Mythic</option>
-                <option value="Ritty - Mythic" selected>Ritty - Mythic</option>
+                <option value="Ritty - Mythic" >Ritty - Mythic</option>
                 <option value="Summoner - Mythic">Summoner - Mythic</option>
                 <option value="Zealot - Mythic">Zealot - Mythic</option>
-                <option value="Mage - Legend" selected>Mage - Legendary</option>
+                <option value="Mage - Legend" >Mage - Legendary</option>
                 <option value="Ascendant - Legendary">Ascendant - Legendary</option>
                 <option value="Developer - Legendary">Developer - Legendary</option>
                 <option value="Bless - Epic">Bless - Epic</option>
@@ -60,7 +60,7 @@
 
             <div class="form-group">
               <label for="cardNumber">Card Number</label>
-              <input type="text" id="cardNumber" value="#002" placeholder="#002">
+              <input type="text" id="cardNumber" value="#003" placeholder="#003">
             </div>
           </div>
 
@@ -125,7 +125,7 @@
           </div>
 
           <div class="card-header">
-            <span id="displayNumber" class="card-number">#002</span>
+            <span id="displayNumber" class="card-number">#003</span>
             <span id="displayOwner" class="card-owner"></span>
             <!-- Halloween Decorations (inside card) -->
 <div class="halloween-decor">
@@ -155,12 +155,8 @@
         </div>
       </div>
     </div>
-
-    <section class="theme-gallery">
-      <h3>Available Themes</h3>
-      <div class="theme-grid" id="themeGrid"></div>
-    </section>
-  </div>
+<div id="themeCircles" class="theme-circles"></div>
+    
 
   <footer class="footer">
     <p>GRITUAL • Where Light Meets Shadow</p>

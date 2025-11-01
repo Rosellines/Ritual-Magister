@@ -692,3 +692,40 @@ body.halloween-active #halloween-decor {
   from { filter: brightness(0.8); }
   to { filter: brightness(1.2); }
 }
+.theme-circles {
+  position: absolute;
+  bottom: -30px;
+  left: 63%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .theme-circles {
+    bottom: -60px;
+    gap: 0.75rem;
+  }
+}
+
+
+.theme-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+ 
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.theme-circle:hover {
+  transform: scale(1.15);
+}
+
+.theme-circle.active {
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25), 0 0 12px rgba(var(--accent-rgb), 0.6);
+  border-color: var(--accent-color);
+}
