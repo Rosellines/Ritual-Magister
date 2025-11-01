@@ -584,3 +584,111 @@ body {
     animation: none !important;
     transition: none !important;
 }
+#halloween-decor {
+  display: none;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.halloween-active #halloween-decor {
+  display: block;
+}
+
+.bat {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 80px;
+  animation: fly 6s infinite ease-in-out alternate;
+}
+@keyframes fly {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(10deg); }
+  100% { transform: translateY(-10px) rotate(-10deg); }
+}
+
+.pumpkin {
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  width: 100px;
+  animation: pumpkinBob 4s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.moon {
+  position: absolute;
+  top: 5%;
+  right: 28%;
+  width: 50px;
+  opacity: 0.9;
+  animation: glow 8s infinite alternate;
+}
+@keyframes glow {
+  from { filter: brightness(0.8); }
+  to { filter: brightness(1.2); }
+}
+.halloween-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  z-index: 4; /* di atas texture-overlay, di bawah teks */
+}
+
+.nft-card.halloween-active .halloween-decor {
+  display: block;
+}
+
+/* moon */
+.halloween-decor .moon {
+  position: absolute;
+  top: 208%;
+  right: 10%;
+  width: 80px;
+  opacity: 0.9;
+  animation: glow 6s infinite alternate ease-in-out;
+}
+
+/* bat */
+.halloween-decor .bat {
+  position: absolute;
+  top: -10%;
+  left: -300%;
+  width: 60px;
+  animation: batFly 5s infinite ease-in-out alternate;
+}
+
+/* pumpkin */
+.halloween-decor .pumpkin {
+  position: absolute;
+  bottom: 10%;
+  right: 0%;
+  width: 90px;
+  bottom: -31.5rem; /* posisinya tepat di atas footer */
+  transform: translateX(-50%);
+  z-index: 6;
+  animation: pulse 3.5s infinite ease-in-out;
+}
+
+
+@keyframes batFly {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(10deg); }
+  100% { transform: translateY(10px) rotate(-10deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes glow {
+  from { filter: brightness(0.8); }
+  to { filter: brightness(1.2); }
+}

@@ -68,7 +68,14 @@ const themes = {
     cardGradient: 'linear-gradient(135deg, #4b5563 0%, #9aa4b2 50%, #dfe7f7 100%)',
     accentHex: '#9aa4b2',
     hologram: 'azure'
-  }
+  },
+  Halloween: {
+  name: 'Halloween Night',
+  pageGradient: 'linear-gradient(135deg, #0d0208 0%, #1a0303 40%, #3b0b0b 100%)',
+  cardGradient: 'linear-gradient(135deg, #ff6b00 0%, #f5a300 40%, #ff6b00 100%)',
+  accentHex: '#ff6b00',
+  hologram: 'fire'
+}
 };
 
 /* -------------------------
@@ -162,6 +169,11 @@ function updateCard() {
 function applyThemeToCSS(themeKey) {
   const theme = themes[themeKey];
   if (!theme) return;
+if (themeKey === 'Halloween') {
+  document.body.style.background = 'url("bg.png") center/cover no-repeat fixed';
+} else {
+  document.body.style.background = theme.pageGradient;
+}
 
   // derive accent rgb
   const accentRgb = hexToRgb(theme.accentHex);
@@ -198,22 +210,32 @@ function applyThemeToCSS(themeKey) {
 /* -------------------------
    changeTheme: keeps original logic but calls applyThemeToCSS
    ------------------------- */
+/* -------------------------
+   changeTheme: keeps original logic but calls applyThemeToCSS
+   ------------------------- */
 function changeTheme(themeKey) {
+  // === Aktifkan dekorasi Halloween di dalam kartu ===
+  if (themeKey === 'Halloween') {
+    nftCard.classList.add('halloween-active');
+  } else {
+    nftCard.classList.remove('halloween-active');
+  }
+
   currentTheme = themeKey;
   const theme = themes[themeKey];
 
   // apply CSS vars theme-wide
   applyThemeToCSS(themeKey);
 
-  // Apply card background & dynamic box-shadow using CSS variables (kept inline to preserve original immediate visual)
+  // Apply card background & dynamic box-shadow using CSS variables
   nftCard.style.background = theme.cardGradient;
   nftCard.style.boxShadow = `0 25px 50px -12px rgba(${hexToRgb(theme.accentHex)},0.40), 0 20px 40px -10px rgba(${hexToRgb(theme.accentHex)},0.28), 0 15px 30px -8px rgba(0,0,0,0.6)`;
 
-  // dynamic glow (inline) — still harmonized to accent color
+  // dynamic glow
   glowEffect.style.background = `
-  radial-gradient(circle at 30% 20%, rgba(${hexToRgb(theme.accentHex)},0.20) 0%, transparent 50%),
-  radial-gradient(circle at 70% 80%, rgba(${hexToRgb(theme.accentHex)},0.16) 0%, transparent 60%)
-`;
+    radial-gradient(circle at 30% 20%, rgba(${hexToRgb(theme.accentHex)},0.20) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(${hexToRgb(theme.accentHex)},0.16) 0%, transparent 60%)
+  `;
 
   const rarityBadge = document.getElementById('displayRarity');
   rarityBadge.style.background = `linear-gradient(90deg, rgba(${hexToRgb(theme.accentHex)},0.18), rgba(255,255,255,0.02))`;
@@ -227,7 +249,16 @@ function changeTheme(themeKey) {
 
   updateHologramOverlay(theme.hologram);
   updateTextureOverlay(themeKey);
+
+  // === Ganti gambar tengah kartu khusus Halloween ===
+  const cardImg = nftCard.querySelector('.card-image img');
+  if (themeKey === 'Halloween') {
+    cardImg.src = 'halloween-card.png'; // ganti dengan gambar Halloween lo
+  } else {
+    cardImg.src = 'image.jpeg'; // balik ke default
+  }
 }
+
 
 /* -------------------------
    updateHologramOverlay & updateTextureOverlay
